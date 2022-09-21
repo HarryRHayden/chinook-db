@@ -14,12 +14,14 @@ class ArtistTable(base):
     ArtistId = Column(Integer, primary_key=True)
     Name = Column(String)
 
+
 # create a class-based model for the "Album" table
 class AlbumTable(base):
     __tablename__ = "Album"
     AlbumId = Column(Integer, primary_key=True)
     Title = Column(String)
     ArtistId = Column(Integer, ForeignKey("Artist.ArtistId"))
+
 
 # create a class-based model for the "Track" table
 class TrackTable(base):
@@ -34,16 +36,19 @@ class TrackTable(base):
     Bytes = Column(Integer, primary_key=False)
     UnitPrice = Column(Float)
 
-# create a class-basde model for the "Album" table
 
 # instead of connecting to the database directly, we will ask for a session
 # create a new instance of sessionmaker, then point to our engine (the db)
 Session = sessionmaker(db)
+
+
 # opens an actual session by calling the session() subclass defined above
 session = Session()
 
+
 # creating the database using declarative_base_subclass
 base.metadata.create_all(db)
+
 
 # Query 1 - select all records from the "Artist" table
 # artists = session.query(ArtistTable)
@@ -68,7 +73,23 @@ base.metadata.create_all(db)
 # print(artist.ArtistId, artist.Name, sep=" | ")
 
 # Query 5 - select only the albums with "ArtistId" #51 from the "Album" table
-artist = session.query(Album).filter_by(ArtistId="51")
-for album in albums:
-    print(album.AlbumId, album.Title, album.ArtistId, sep=" | ")
+# albums = session.query(AlbumTable).filter_by(ArtistId="51")
+# for album in albums:
+#     print(album.AlbumId, album.Title, album.ArtistId, sep=" | ")
 
+
+# Query 5 - select all the tracks with "Composer" Queen from the "Track" table
+tracks = session.query(TrackTable).filter_by(Composer = "Queen")
+for track in tracks:
+    print(
+        track.TrackId, 
+        track.Name, 
+        track.AlbumId, 
+        track.MediaTypeId, 
+        track.GenreId, 
+        track.Composer, 
+        track.Milliseconds, 
+        track.Bytes, 
+        track.UnitPrice, 
+        sep=" | "
+    )
